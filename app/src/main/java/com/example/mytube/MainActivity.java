@@ -245,8 +245,6 @@ public class MainActivity extends YouTubeBaseActivity {
                         int indexEnd = strTmp.indexOf("class=");
                         String href = strTmp.substring(indexStr+6,indexEnd-2);
 
-                       // System.out.println("www.youtube.com"+href);
-
                         indexStr = strTmp.indexOf("dir=\"ltr\">");
                         indexEnd = strTmp.indexOf("</a>");
                         String title = strTmp.substring(indexStr+10,indexEnd);;
