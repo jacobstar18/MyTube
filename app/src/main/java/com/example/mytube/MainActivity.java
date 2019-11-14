@@ -77,9 +77,9 @@ public class MainActivity extends YouTubeBaseActivity {
         @Override
         public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
             /* 초기화 성공하면 유튜브 동영상 ID를 전달하여 동영상 재생*/
-            youTubePlayer.loadVideo("SGWohw86Xk8"); // 동영상 ID는 URL 상단의 마지막 부분이다.
+           // youTubePlayer.loadVideo("SGWohw86Xk8"); // 동영상 ID는 URL 상단의 마지막 부분이다.
+             youTubePlayer.loadVideo("gl1aHhXnN1k"); // 동영상 ID는 URL 상단의 마지막 부분이다.
         }
-
         @Override
         public void onInitializationFailure(com.google.android.youtube.player.YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
 
@@ -235,26 +235,27 @@ public class MainActivity extends YouTubeBaseActivity {
                     lists.clear();;
                     Document doc2 = Jsoup.connect(Url_id).get();
                     // div 이며 id 가 post-area
-                    //Elements titles  = doc2.select("div.yt-lockup-content h3 a");
-                    Elements titles  = doc2.select("img.style-scope yt-img-shadow");
+                    Elements titles  = doc2.select("div.yt-lockup-content h3 a");
+                    //Elements titles  = doc2.select("img.style-scope yt-img-shadow");
 
                     for (Element e : titles){
-                        System.out.println(e.toString());
                         String strTmp = e.toString();
-                        int indexStr = strTmp.indexOf("href=");
-                        int indexEnd = strTmp.indexOf("class=");
-                        String href = strTmp.substring(indexStr+6,indexEnd-2);
+                        System.out.println(strTmp);
+                        int indexStr = strTmp.indexOf("/watch?v=");
+                        int indexEnd = strTmp.indexOf("class=\"yt-uix-tile-link");
+                        if (indexStr != -1 && indexEnd != -1) {
+                            String href = strTmp.substring(indexStr + 9, indexEnd - 2);
+                            lists.add(href);
+                        }
 
                         indexStr = strTmp.indexOf("dir=\"ltr\">");
                         indexEnd = strTmp.indexOf("</a>");
-                        String title = strTmp.substring(indexStr+10,indexEnd);;
-
-                        lists.add(title);
+                        if (indexStr != -1 && indexEnd != -1) {
+                            String title = strTmp.substring(indexStr+10,indexEnd);;
+                            lists.add(title);
+                        }
 
                     }
-
-
-
                 }
 
                 catch (IOException e) {
@@ -270,7 +271,9 @@ public class MainActivity extends YouTubeBaseActivity {
     public void settingDex(){
         for (int k = 0; k < lists.size(); k++) {
             ll = (LinearLayout) findViewById(R.id.ll);
-            tv = new TextView(this);
+            View v = ll.getChildAt(k);
+            tv = new Button(this);
+            tv = (Button) v;
             tv.setText(lists.get(k).toString());
             ll.addView(tv);
         }
